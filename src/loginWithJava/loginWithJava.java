@@ -93,19 +93,19 @@ public class loginWithJava extends JFrame {
 				//String passdb;
 				
 				Connection conn = null;
-				PreparedStatement p = null;
+				PreparedStatement myPS = null;
 				try {
 					
 					conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/management","root","yukkuri");
 					
 					String sql ="select * from employee where id=? and pass=?";
 					
-					p = conn.prepareStatement(sql);
+					myPS = conn.prepareStatement(sql);
 					
-					p.setString(1,inputId);
-					p.setString(2,inputPass);
+					myPS.setString(1,inputId);
+					myPS.setString(2,inputPass);
 					
-					ResultSet myRS = p.executeQuery();
+					ResultSet myRS = myPS.executeQuery();
 					
 					boolean isUser =false;
 			
@@ -113,12 +113,12 @@ public class loginWithJava extends JFrame {
 						if(myRS!=null) {
 							isUser = true;
 							if(inputId.equals("1")) {
-								admin adminmove = new admin();
-								adminmove.setVisible(true);
+								admin adminView = new admin();
+								adminView.setVisible(true);
 								dispose();
 								}else {
-									ippann ippannmove = new ippann();
-									ippannmove.setVisible(true);
+									ippann ippannView = new ippann();
+									ippannView.setVisible(true);
 									dispose();
 									}
 							}
