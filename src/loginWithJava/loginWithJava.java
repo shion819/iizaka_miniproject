@@ -3,9 +3,11 @@ package loginWithJava;
 
 import java.awt.EventQueue;
 
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -19,8 +21,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
+import java.sql.PreparedStatement;
 
 public class loginWithJava extends JFrame {
+	
 
 	private JPanel contentPane;
 	private JTextField idfield;
@@ -85,15 +89,60 @@ public class loginWithJava extends JFrame {
 				String inputId = idfield.getText();
 				String inputPass = passfield.getText();
 				
-				String iddb;
-				String passdb;
+				//String iddb;
+				//String passdb;
 				
-				Connection conn;
+				Connection conn = null;
+				PreparedStatement myPS = null;
 				try {
+					
 					conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/management","root","yukkuri");
 					
+					String sql ="select * from employee where id=? and pass=?";
+					
+					myPS = conn.prepareStatement(sql);
+					
+					myPS.setString(1,inputId);
+					myPS.setString(2,inputPass);
+					
+					ResultSet myRS = myPS.executeQuery();
+					
+					boolean isUser =false;
 			
-					Statement myst = conn.createStatement();
+					while(myRS.next()) {
+						if(myRS!=null) {
+							isUser = true;
+							if(inputId.equals("1")) {
+								admin adminView = new admin();
+								adminView.setVisible(true);
+								dispose();
+								}else {
+									ippann ippannView = new ippann();
+									ippannView.setVisible(true);
+									dispose();
+									}
+							}
+						}
+					if(isUser == false) {
+						JOptionPane.showMessageDialog(button, "Id又はPasswordが間違っています。");
+					}
+					
+					conn.close();
+		
+						/*if(myRS!=null) {
+						if(inputId.equals("1")) {
+							admin a = new admin();
+							a.setVisible(true);
+						}else {
+							ippann v = new ippann();
+							v.setVisible(true);
+						}
+						}else {
+						JOptionPane.showMessageDialog(button, "Id又はPasswordが間違っています。");
+						}*/
+					
+			
+					/*Statement myst = conn.createStatement();
 					
 					ResultSet myRS =myst.executeQuery("Select id, pass from employee");
 					
@@ -116,18 +165,14 @@ public class loginWithJava extends JFrame {
 					}
 					if (isUser == false) {
 						JOptionPane.showMessageDialog(button, "Id又はPasswordが間違っています。");
-					}
-			}catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					}*/
+					}catch (SQLException e) {
+						e.printStackTrace();
+						}
 				}
-			}
-		
-		});
+			});
 		button.setBounds(147, 205, 91, 21);
 		contentPane.add(button);
-		
-		
-	}
+		}
 	}
 
