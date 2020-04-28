@@ -113,12 +113,12 @@ public class loginWithJava extends JFrame {
 						if(myRS!=null) {
 							isUser = true;
 							if(inputId.equals("1")) {
-								admin a = new admin();
-								a.setVisible(true);
+								admin adminmove = new admin();
+								adminmove.setVisible(true);
 								dispose();
 								}else {
-									ippann v = new ippann();
-									v.setVisible(true);
+									ippann ippannmove = new ippann();
+									ippannmove.setVisible(true);
 									dispose();
 									}
 							}
