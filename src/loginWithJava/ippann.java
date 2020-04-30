@@ -49,8 +49,8 @@ public class ippann extends JFrame {
 		JButton startBtn = new JButton("出勤");
 		startBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				start s = new start();
-				s.setVisible(true);
+				starts startView = new starts();
+				startView.setVisible(true);
 				dispose();
 			}
 		});
@@ -58,20 +58,44 @@ public class ippann extends JFrame {
 		contentPane.add(startBtn);
 		
 		JButton endBtn = new JButton("退勤");
+		endBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				end endView = new end();
+				endView.setVisible(true);
+				dispose();
+			}
+		});
 		endBtn.setBounds(12, 104, 91, 37);
 		contentPane.add(endBtn);
 		
 		JButton restStartBtn = new JButton("休憩開始");
+		restStartBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				restStart reStartView = new restStart();
+				reStartView.setVisible(true);
+				dispose();
+			}
+		});
 		restStartBtn.setBounds(12, 151, 91, 37);
 		contentPane.add(restStartBtn);
 		
 		JButton restEndBtn = new JButton("休憩終了");
+		restEndBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				restEnd reEnd = new restEnd();
+				reEnd.setVisible(true);
+				dispose();
+			}
+		});
 		restEndBtn.setBounds(12, 198, 91, 37);
 		contentPane.add(restEndBtn);
 		
 		JButton infobtn = new JButton("勤怠情報");
 		infobtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				dutyList dtListView = new dutyList();
+				dtListView.setVisible(true);
+				dispose();
 			}
 		});
 		infobtn.setBounds(12, 245, 91, 37);
@@ -80,8 +104,8 @@ public class ippann extends JFrame {
 		JButton logOutBtn = new JButton("ログアウト");
 		logOutBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				loginWithJava l = new loginWithJava();
-				l.setVisible(true);
+				loginWithJava loginView = new loginWithJava();
+				loginView.setVisible(true);
 				dispose();
 			}
 		});
