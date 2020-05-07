@@ -1,6 +1,7 @@
 package loginWithJava;
 
 
+
 import java.awt.EventQueue;
 
 
@@ -27,7 +28,7 @@ public class loginWithJava extends JFrame {
 	
 
 	private JPanel contentPane;
-	private JTextField idfield;
+	private static JTextField idfield;
 	private JTextField passfield;
 
 	/**
@@ -48,6 +49,7 @@ public class loginWithJava extends JFrame {
 
 	/**
 	 * Create the frame.
+
 	 */
 	public loginWithJava() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -174,5 +176,8 @@ public class loginWithJava extends JFrame {
 		button.setBounds(147, 205, 91, 21);
 		contentPane.add(button);
 		}
+	public static class User{
+		public static final String inputId=idfield.getText();
+	}
 	}
 
