@@ -1,18 +1,9 @@
 package loginWithJava;
 
-import java.awt.BorderLayout;
-
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import loginWithJava.loginWithJava.User;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.Date;
@@ -20,16 +11,26 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.awt.event.ActionEvent;
-import java.awt.SystemColor;
-import java.awt.Color;
-import java.awt.Font;
-import javax.swing.JTextField;
+import java.time.Clock;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import loginWithJava.loginWithJava.User;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 public class starts extends JFrame {
-
+	
 	private JPanel contentPane;
 
 	/**
@@ -58,6 +59,22 @@ public class starts extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+
+		
+		
+		JLabel clockLabel = new JLabel("New label");
+		clockLabel.addPropertyChangeListener(new PropertyChangeListener() {
+			
+			public void propertyChange(PropertyChangeEvent arg0) {
+				java.util.Date date = new java.util.Date();
+				DateFormat timeFormat = new SimpleDateFormat("ログイン時間"+"HH:mm:ss");
+				String time = timeFormat.format(date);
+				clockLabel.setText(time);
+			}
+		});
+		
+		clockLabel.setBounds(368, 22, 182, 13);
+		contentPane.add(clockLabel);	
 		
 		JLabel label = new JLabel("出勤ページ");
 		label.setBounds(12, 10, 123, 37);
@@ -193,5 +210,8 @@ public class starts extends JFrame {
 		label_1.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
 		label_1.setBounds(101, 70, 117, 26);
 		panel.add(label_1);
+		
+
+		
 	}
 }
