@@ -21,7 +21,7 @@ import javax.swing.border.EmptyBorder;
 
 import loginWithJava.login.User;
 
-public class start extends JFrame {
+public class restEnd extends JFrame {
 	
 	private JPanel contentPane;
 
@@ -32,7 +32,7 @@ public class start extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					start frame = new start();
+					restEnd frame = new restEnd();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,7 +44,7 @@ public class start extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public start() {
+	public restEnd() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 566, 433);
 		contentPane = new JPanel();
@@ -52,7 +52,7 @@ public class start extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel label = new JLabel("出勤ページ");
+		JLabel label = new JLabel("休憩終了画面");
 		label.setBounds(12, 10, 123, 37);
 		contentPane.add(label);
 		
@@ -128,35 +128,57 @@ public class start extends JFrame {
 				Connection conn = null;
 				PreparedStatement myPS = null;
 				PreparedStatement myPS2 = null;
+				PreparedStatement myPS3 = null;
 
 				try {
 					
 					conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/management","root","yukkuri");
 					
-					String sql = "insert into workschedule (workDate,beginTime,employee_id) value(CURDATE(),CURTIME(),?)";
-					String sql2 ="select * from workschedule where workDate=CURDATE() and employee_id=?";
+					String sql = "UPDATE workschedule SET restEnd=CURTIME() WHERE workDate=CURDATE() AND employee_id=?";
+					String sql2 ="select * from workschedule where workDate=CURDATE() and beginTime and restBegin and restEnd and employee_id=?";
+					String sql3 ="select * from workschedule where workDate=CURDATE() and restBegin and employee_id=?";
 					
 					myPS = conn.prepareStatement(sql);
 					myPS2= conn.prepareStatement(sql2);
+					myPS3= conn.prepareStatement(sql3);
 					
 					myPS.setString(1,User.inputId);
 					myPS2.setString(1,User.inputId);
+					myPS3.setString(1,User.inputId);
 					
-					ResultSet myRS = myPS2.executeQuery();
-					boolean hasAttended =false;
 					
-					while( myRS.next()) {
-						if(myRS!=null) {
-							hasAttended = true;
-							JOptionPane.showMessageDialog(yesBtn, "出勤済みです");
+					ResultSet myRS2 = myPS2.executeQuery();
+					ResultSet myRS3 = myPS3.executeQuery();
+					boolean restEnd =false;
+					boolean restStart = false;
+					
+					while(myRS3.next()) {
+						if(myRS3!=null) {
+							restStart=true;
+							while(myRS2.next()) {
+								if(myRS2!=null) {
+									restEnd=true;JOptionPane.showMessageDialog(yesBtn, "すでに休憩を終了しています");
+									}
+									}if(restEnd==false) {
+										int myRS = myPS.executeUpdate();
+										if(myRS!=0) {
+											JOptionPane.showMessageDialog(yesBtn, "休憩を終了しました");
+										}else {
+											JOptionPane.showMessageDialog(yesBtn, "出勤していません");
+										}
+									}
+								
 						}
-					}if(hasAttended==false){
-						myPS.execute();
-						JOptionPane.showMessageDialog(yesBtn, "出勤しました");
+					}if(restStart==false) {
+						JOptionPane.showMessageDialog(yesBtn, "休憩を開始していません");
 					}
 					
-					//System.out.println(myPS);
+					
+					
+					
+
 			}catch (SQLException e) {
+				
 				e.printStackTrace();
 				}
 			}
@@ -175,9 +197,9 @@ public class start extends JFrame {
 		noBtn.setBounds(186, 206, 91, 36);
 		panel.add(noBtn);
 		
-		JLabel label_1 = new JLabel("出勤しますか？");
+		JLabel label_1 = new JLabel("休憩を終了しますか？");
 		label_1.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
-		label_1.setBounds(101, 70, 117, 26);
+		label_1.setBounds(76, 70, 180, 26);
 		panel.add(label_1);
 		
 	}

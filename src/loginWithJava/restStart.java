@@ -90,6 +90,13 @@ public class restStart extends JFrame {
 		contentPane.add(restStartBtn);
 		
 		JButton restEndBtn = new JButton("休憩終了");
+		restEndBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				restEnd restEndView = new restEnd();
+				restEndView.setVisible(true);
+				dispose();
+			}
+		});
 		restEndBtn.setBounds(12, 198, 91, 37);
 		contentPane.add(restEndBtn);
 		
