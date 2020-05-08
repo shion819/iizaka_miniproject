@@ -79,6 +79,13 @@ public class start extends JFrame {
 		contentPane.add(endBtn);
 		
 		JButton restStartBtn = new JButton("休憩開始");
+		restStartBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				restStart restStartView = new restStart();
+				restStartView.setVisible(true);
+				dispose();
+			}
+		});
 		restStartBtn.setBounds(12, 151, 91, 37);
 		contentPane.add(restStartBtn);
 		
