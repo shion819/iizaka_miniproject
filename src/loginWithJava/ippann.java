@@ -75,6 +75,13 @@ public class ippann extends JFrame {
 		contentPane.add(startBtn);
 		
 		JButton endBtn = new JButton("退勤");
+		endBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				end endView = new end();
+				endView.setVisible(true);
+				dispose();
+			}
+		});
 		endBtn.setBounds(12, 104, 91, 37);
 		contentPane.add(endBtn);
 		
