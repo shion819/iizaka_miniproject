@@ -77,7 +77,7 @@ public class ippann extends JFrame {
 		JButton endBtn = new JButton("退勤");
 		endBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				end endView = new end();
+				end2 endView = new end2();
 				endView.setVisible(true);
 				dispose();
 			}
