@@ -130,14 +130,14 @@ public class end extends JFrame {
 					
 					
 					ResultSet myRS2 = myPS2.executeQuery();
-					boolean hasAttended =false;
+					boolean hasStart =false;
 					
 					while(myRS2.next()) {
 						if(myRS2!=null) {
 							hasAttended=true;
 							JOptionPane.showMessageDialog(yesBtn, "退勤済みです");
 						}
-					}if(hasAttended==false) {
+					}if(hasStart==false) {
 						int myRS = myPS.executeUpdate();
 						if(myRS!=0) {
 							JOptionPane.showMessageDialog(yesBtn, "退勤しました");
