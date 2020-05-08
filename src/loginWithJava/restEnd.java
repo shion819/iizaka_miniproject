@@ -146,20 +146,20 @@ public class restEnd extends JFrame {
 					myPS2.setString(1,User.inputId);
 					myPS3.setString(1,User.inputId);
 					
-					
 					ResultSet myRS2 = myPS2.executeQuery();
 					ResultSet myRS3 = myPS3.executeQuery();
-					boolean restEnd =false;
-					boolean restStart = false;
+					boolean endBreakTime =false;
+					boolean breakTimeStart = false;
 					
 					while(myRS3.next()) {
 						if(myRS3!=null) {
-							restStart=true;
+							breakTimeStart=true;
 							while(myRS2.next()) {
 								if(myRS2!=null) {
-									restEnd=true;JOptionPane.showMessageDialog(yesBtn, "すでに休憩を終了しています");
+									endBreakTime=true;
+									JOptionPane.showMessageDialog(yesBtn, "すでに休憩を終了しています");
 									}
-									}if(restEnd==false) {
+									}if(endBreakTime==false) {
 										int myRS = myPS.executeUpdate();
 										if(myRS!=0) {
 											JOptionPane.showMessageDialog(yesBtn, "休憩を終了しました");
@@ -169,7 +169,7 @@ public class restEnd extends JFrame {
 									}
 								
 						}
-					}if(restStart==false) {
+					}if(breakTimeStart==false) {
 						JOptionPane.showMessageDialog(yesBtn, "休憩を開始していません");
 					}
 					
