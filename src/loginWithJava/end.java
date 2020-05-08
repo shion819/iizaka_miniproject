@@ -108,6 +108,51 @@ public class end extends JFrame {
 		panel.setLayout(null);
 		
 		JButton yesBtn = new JButton("はい");
+		yesBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				Connection conn = null;
+				PreparedStatement myPS = null;
+				PreparedStatement myPS2 = null;
+
+				try {
+					
+					conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/management","root","yukkuri");
+					
+					String sql = "UPDATE workschedule SET endTime=CURTIME() WHERE workDate=CURDATE() AND employee_id=?";
+					String sql2 ="select * from workschedule where workDate=CURDATE() and beginTime and endTime and employee_id=?";
+					
+					myPS = conn.prepareStatement(sql);
+					myPS2= conn.prepareStatement(sql2);
+					
+					myPS.setString(1,User.inputId);
+					myPS2.setString(1,User.inputId);
+					
+					
+					ResultSet myRS2 = myPS2.executeQuery();
+					boolean hasAttended =false;
+					
+					while(myRS2.next()) {
+						if(myRS2!=null) {
+							hasAttended=true;
+							JOptionPane.showMessageDialog(yesBtn, "退勤済みです");
+						}
+					}if(hasAttended==false) {
+						int myRS = myPS.executeUpdate();
+						if(myRS!=0) {
+							JOptionPane.showMessageDialog(yesBtn, "退勤しました");
+						}else {
+							JOptionPane.showMessageDialog(yesBtn, "出勤していません");
+						}
+					}
+					
+
+			}catch (SQLException e) {
+				
+				e.printStackTrace();
+				}
+			}
+		});
 		yesBtn.setBounds(38, 206, 91, 36);
 		panel.add(yesBtn);
 		
