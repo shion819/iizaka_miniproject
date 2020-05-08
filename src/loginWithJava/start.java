@@ -122,14 +122,14 @@ public class start extends JFrame {
 					myPS2.setString(1,User.inputId);
 					
 					ResultSet myRS = myPS2.executeQuery();
-					boolean User =false;
+					boolean hasAttended =false;
 					
 					while( myRS.next()) {
 						if(myRS!=null) {
-							User = true;
+							hasAttended = true;
 							JOptionPane.showMessageDialog(yesBtn, "出勤済みです");
 						}
-					}if(User==false){
+					}if(hasAttended==false){
 						myPS.execute();
 						JOptionPane.showMessageDialog(yesBtn, "出勤しました");
 					}
