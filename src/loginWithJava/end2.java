@@ -101,6 +101,13 @@ public class end2 extends JFrame {
 		contentPane.add(restEndBtn);
 		
 		JButton infobtn = new JButton("勤怠情報");
+		infobtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dutyInfo dutyInfoView =new dutyInfo();
+				dutyInfoView.setVisible(true);
+				dispose();
+			}
+		});
 		infobtn.setBounds(12, 245, 91, 37);
 		contentPane.add(infobtn);
 		
