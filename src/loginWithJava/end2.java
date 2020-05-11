@@ -103,7 +103,7 @@ public class end2 extends JFrame {
 		JButton infobtn = new JButton("勤怠情報");
 		infobtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dutyInfo dutyInfoView =new dutyInfo();
+				dutyInfo2 dutyInfoView =new dutyInfo2();
 				dutyInfoView.setVisible(true);
 				dispose();
 			}
