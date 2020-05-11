@@ -101,6 +101,13 @@ public class restEnd extends JFrame {
 		contentPane.add(restEndBtn);
 		
 		JButton infobtn = new JButton("勤怠情報");
+		infobtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dutyInfo dutyInfoView =new dutyInfo();
+				dutyInfoView.setVisible(true);
+				dispose();
+			}
+		});
 		infobtn.setBounds(12, 245, 91, 37);
 		contentPane.add(infobtn);
 		
@@ -172,10 +179,6 @@ public class restEnd extends JFrame {
 					}if(breakTimeStart==false) {
 						JOptionPane.showMessageDialog(yesBtn, "休憩を開始していません");
 					}
-					
-					
-					
-					
 
 			}catch (SQLException e) {
 				
