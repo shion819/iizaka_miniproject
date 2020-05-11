@@ -1,29 +1,42 @@
 package loginWithJava;
 
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.SystemColor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.awt.BorderLayout;
 
-import javax.swing.JButton;
+import java.awt.EventQueue;
+import java.awt.SystemColor;
+
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import loginWithJava.login.User;
+import net.proteanit.sql.DbUtils;
 
-public class start extends JFrame {
-	
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.awt.event.ActionEvent;
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+
+public class dutyInfo2 extends JFrame {
+
 	private JPanel contentPane;
+	private JTable table;
+	private JFormattedTextField dateField;
+	
 
 	/**
 	 * Launch the application.
@@ -32,7 +45,7 @@ public class start extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					start frame = new start();
+					dutyInfo2 frame = new dutyInfo2();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,25 +53,24 @@ public class start extends JFrame {
 			}
 		});
 	}
-
 	/**
 	 * Create the frame.
 	 */
-	public start() {
+	public dutyInfo2() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 566, 433);
+		setBounds(100, 100, 888, 431);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel label = new JLabel("出勤ページ");
+		JLabel label = new JLabel("一般ページ");
 		label.setBounds(12, 10, 123, 37);
 		contentPane.add(label);
 		
 		JButton startBtn = new JButton("出勤");
 		startBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				start startView = new start();
 				startView.setVisible(true);
 				dispose();
@@ -124,68 +136,71 @@ public class start extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(SystemColor.inactiveCaption);
-		panel.setBounds(184, 57, 320, 308);
+		panel.setBounds(166, 57, 625, 327);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		JButton yesBtn = new JButton("はい");
-		yesBtn.addActionListener(new ActionListener() {
+		JLabel label_1 = new JLabel("閲覧したい年月を入力してください");
+		label_1.setFont(new Font("MS UI Gothic", Font.PLAIN, 12));
+		label_1.setBounds(12, 10, 169, 37);
+		panel.add(label_1);
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM");
+		dateField = new JFormattedTextField(dateFormat);
+		dateField.setBounds(22, 44, 112, 25);
+		dateField.setValue(new Date());
+		panel.add(dateField);
+		dateField.setColumns(10);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 77, 601, 240);
+		panel.add(scrollPane);
+		table = new JTable();
+		scrollPane.setViewportView(table);
+		
+		JButton button = new JButton("閲覧");
+		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				String dateSarch = dateField.getText();
 				
 				Connection conn = null;
 				PreparedStatement myPS = null;
-				PreparedStatement myPS2 = null;
-
+				
 				try {
 					
 					conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/management","root","yukkuri");
-					
-					String sql = "insert into workschedule (workDate,beginTime,employee_id) value(CURDATE(),CURTIME(),?)";
-					String sql2 ="select * from workschedule where workDate=CURDATE() and employee_id=?";
-					
+					String sql ="SELECT workDate, beginTime, restBegin, restEnd, endTime FROM workschedule WHERE (DATE_FORMAT(workDate, '%Y/%m') = ?) AND employee_id=?";
 					myPS = conn.prepareStatement(sql);
-					myPS2= conn.prepareStatement(sql2);
 					
-					myPS.setString(1,User.inputId);
-					myPS2.setString(1,User.inputId);
+					myPS.setString(1,dateSarch);
+					myPS.setString(2,User.inputId);
 					
-					ResultSet myRS = myPS2.executeQuery();
-					boolean hasAttended =false;
+					ResultSet myRS = myPS.executeQuery();
+					table.setModel(DbUtils.resultSetToTableModel(myRS));
 					
-					while( myRS.next()) {
-						if(myRS!=null) {
-							hasAttended = true;
-							JOptionPane.showMessageDialog(yesBtn, "出勤済みです");
-						}
-					}if(hasAttended==false){
-						myPS.execute();
-						JOptionPane.showMessageDialog(yesBtn, "出勤しました");
-					}
-					
-					//System.out.println(myPS);
-			}catch (SQLException e) {
-				e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		});
-		yesBtn.setBounds(38, 206, 91, 36);
-		panel.add(yesBtn);
+		button.setBounds(146, 46, 62, 21);
+		panel.add(button);
 		
-		JButton noBtn = new JButton("いいえ");
-		noBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		JButton button_1 = new JButton("戻る");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				ippann ippannView = new ippann();
 				ippannView.setVisible(true);
 				dispose();
 			}
 		});
-		noBtn.setBounds(186, 206, 91, 36);
-		panel.add(noBtn);
+		button_1.setBounds(522, 18, 91, 21);
+		panel.add(button_1);
 		
-		JLabel label_1 = new JLabel("出勤しますか？");
-		label_1.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
-		label_1.setBounds(101, 70, 117, 26);
-		panel.add(label_1);
+		
+		
 		
 	}
 }
+
