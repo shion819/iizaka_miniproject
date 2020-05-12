@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="C:/Users/VOICE009/Desktop/mysql-connector-java-5.1.48/mysql-connector-java-5.1.48-bin.jar"/>
 	<classpathentry kind="lib" path="C:/Users/VOICE009/Downloads/rs2xml.jar"/>
+	<classpathentry kind="lib" path="jcalendar-1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

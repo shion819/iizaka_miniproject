@@ -46,29 +46,32 @@ public class admin extends JFrame {
 		label.setBounds(12, 10, 165, 13);
 		contentPane.add(label);
 		
-		JButton button = new JButton("従業員一覧");
-		button.addActionListener(new ActionListener() {
+		JButton listBtn = new JButton("従業員一覧");
+		listBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				employeeList employeeListView = new employeeList();
+				employeeListView.setVisible(true);
+				dispose();
 			}
 		});
-		button.setBounds(12, 50, 102, 40);
-		contentPane.add(button);
+		listBtn.setBounds(12, 50, 102, 40);
+		contentPane.add(listBtn);
 		
-		JButton button_1 = new JButton("従業員追加");
-		button_1.addActionListener(new ActionListener() {
+		JButton addBtn = new JButton("従業員追加");
+		addBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		button_1.setBounds(12, 100, 102, 40);
-		contentPane.add(button_1);
+		addBtn.setBounds(12, 100, 102, 40);
+		contentPane.add(addBtn);
 		
-		JButton button_2 = new JButton("従業員削除");
-		button_2.setBounds(12, 150, 102, 40);
-		contentPane.add(button_2);
+		JButton deleteBtn = new JButton("従業員削除");
+		deleteBtn.setBounds(12, 150, 102, 40);
+		contentPane.add(deleteBtn);
 		
-		JButton button_3 = new JButton("情報の変更");
-		button_3.setBounds(12, 200, 102, 40);
-		contentPane.add(button_3);
+		JButton changeBtn = new JButton("情報の変更");
+		changeBtn.setBounds(12, 200, 102, 40);
+		contentPane.add(changeBtn);
 		
 		JButton button_4 = new JButton("ログアウト");
 		button_4.addActionListener(new ActionListener() {
