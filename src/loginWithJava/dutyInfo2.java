@@ -1,9 +1,10 @@
 package loginWithJava;
 
 import java.awt.BorderLayout;
-
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,7 +14,10 @@ import loginWithJava.login.User;
 import net.proteanit.sql.DbUtils;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 
 import java.awt.event.ActionListener;
@@ -24,14 +28,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Currency;
 import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.awt.List;
+
 import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JYearChooser;
+import com.toedter.calendar.JMonthChooser;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import com.toedter.components.JSpinField;
+import com.toedter.components.JLocaleChooser;
 
-public class dutyInfo2 extends JFrame {
+public class dutyInfo2<yearCombo> extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -140,17 +159,33 @@ public class dutyInfo2 extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		JLabel label_1 = new JLabel("閲覧したい年月を入力してください");
+		JLabel label_1 = new JLabel("閲覧したい年月を選択してください");
 		label_1.setFont(new Font("MS UI Gothic", Font.PLAIN, 12));
 		label_1.setBounds(12, 10, 169, 37);
 		panel.add(label_1);
+
+		LocalDate currentDate = LocalDate.now();
+		int CurrentYear = currentDate.getYear();
+		/*ArrayList yearAL =new ArrayList();
+		yearAL.add(CurrentYear);
+		yearAL.add(CurrentYear-4);
+		yearAL.add(CurrentYear-5);*/
 		
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM");
-		dateField = new JFormattedTextField(dateFormat);
-		dateField.setBounds(22, 44, 112, 25);
-		dateField.setValue(new Date());
-		panel.add(dateField);
-		dateField.setColumns(10);
+		String[] year = {"2016","2017","2018","2019","2020","2021","2022"};
+		
+        JComboBox yearCombo = new JComboBox(year);
+        yearCombo.setBounds(22, 44, 112, 25);
+        yearCombo.setSelectedIndex(4);
+		panel.add(yearCombo);
+		
+		String []month = new String[13];
+        for(int i = 1; i < month.length; i++){
+            month[i] = String.valueOf(i);
+        }
+        JComboBox monthCombo = new JComboBox(month);
+        monthCombo.setBounds(155, 44, 112, 25);
+        monthCombo.setSelectedIndex(4);
+		panel.add(monthCombo);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 77, 601, 240);
@@ -162,29 +197,33 @@ public class dutyInfo2 extends JFrame {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				String dateSarch = dateField.getText();
-				
 				Connection conn = null;
 				PreparedStatement myPS = null;
 				
 				try {
 					
 					conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/management","root","yukkuri");
-					String sql ="SELECT workDate, beginTime, restBegin, restEnd, endTime FROM workschedule WHERE (DATE_FORMAT(workDate, '%Y/%m') = ?) AND employee_id=?";
+					String sql ="SELECT workDate, beginTime, restBegin, restEnd, endTime FROM workschedule "
+							+"WHERE (DATE_FORMAT(workDate, '%Y') =?) AND (DATE_FORMAT(workDate, '%m')=?) AND employee_id=?";
+					int yearIndex=yearCombo.getSelectedIndex();
+					int monthIndex = monthCombo.getSelectedIndex();
+					String yearSarch = yearCombo.getItemAt(yearIndex).toString();
+					String monthSarch = "0"+monthCombo.getItemAt(monthIndex).toString();
 					myPS = conn.prepareStatement(sql);
 					
-					myPS.setString(1,dateSarch);
-					myPS.setString(2,User.inputId);
+					myPS.setString(1,yearSarch);
+					myPS.setString(2,monthSarch);
+					myPS.setString(3,User.inputId);
 					
 					ResultSet myRS = myPS.executeQuery();
 					table.setModel(DbUtils.resultSetToTableModel(myRS));
-					
+			
 				} catch (Exception e) {
-					e.printStackTrace();
+					
 				}
 			}
 		});
-		button.setBounds(146, 46, 62, 21);
+		button.setBounds(298, 46, 62, 21);
 		panel.add(button);
 		
 		JButton button_1 = new JButton("戻る");
@@ -198,8 +237,15 @@ public class dutyInfo2 extends JFrame {
 		button_1.setBounds(522, 18, 91, 21);
 		panel.add(button_1);
 		
+		JLabel label_2 = new JLabel("年");
+		label_2.setFont(new Font("MS UI Gothic", Font.PLAIN, 16));
+		label_2.setBounds(135, 44, 16, 25);
+		panel.add(label_2);
 		
-		
+		JLabel label_3 = new JLabel("月");
+		label_3.setFont(new Font("MS UI Gothic", Font.PLAIN, 16));
+		label_3.setBounds(270, 42, 16, 27);
+		panel.add(label_3);
 		
 	}
 }
