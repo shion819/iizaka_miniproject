@@ -12,6 +12,7 @@ import loginWithJava.login.User;
 import net.proteanit.sql.DbUtils;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -126,7 +127,6 @@ public class employeeList extends JFrame {
 			myPS = conn.prepareStatement(sql);
 			ResultSet myRS = myPS.executeQuery();
 			table.setModel(DbUtils.resultSetToTableModel(myRS));
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -137,30 +137,51 @@ public class employeeList extends JFrame {
 		panel.add(SarchField);
 		SarchField.setColumns(10);
 		
+		nameField = new JTextField();
+		nameField.setBounds(216, 26, 96, 19);
+		panel.add(nameField);
+		nameField.setColumns(10);
+		
 		JButton sarchBtn = new JButton("検索");
 		sarchBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Connection conn = null;
 				PreparedStatement myPS2 = null;
+				PreparedStatement myPS3 = null;
 				String SarchNumber = SarchField.getText();
+				String SarchName = nameField.getText();
+				boolean textBox =false;
 				
 				try {
 					
 					conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/management","root","yukkuri");
-					String sql ="SELECT * FROM employee where id=?";
+					String sql ="SELECT e.id, e.name, e.gender, p.phone, p.email, p.address, p.school "
+							+ "FROM employee AS e inner join personalInfo AS p ON e.personalInfo_id = p.id where e.id=?";
+					
+					String sql2 ="SELECT e.id, e.name, e.gender, p.phone, p.email, p.address, p.school "
+							+ "FROM employee AS e inner join personalInfo AS p ON e.personalInfo_id = p.id where e.name LIKE ?";
 					myPS2 = conn.prepareStatement(sql);
+					myPS3 = conn.prepareStatement(sql2);
 					
-					myPS2.setString(1,SarchNumber);
-					
-					ResultSet myRS = myPS2.executeQuery();
-					table.setModel(DbUtils.resultSetToTableModel(myRS));
-					
+					if(!(SarchNumber.isEmpty())){
+						textBox = true;
+						myPS2.setString(1,SarchNumber);
+						ResultSet myRS2 = myPS2.executeQuery();
+						table.setModel(DbUtils.resultSetToTableModel(myRS2));
+					}if(!(SarchName.isEmpty())){
+						textBox = true;
+						myPS3.setString(1,"%"+SarchName+"%");
+						ResultSet myRS3 = myPS3.executeQuery();
+						table.setModel(DbUtils.resultSetToTableModel(myRS3));
+					}if(textBox==false){
+						JOptionPane.showMessageDialog(sarchBtn, "名前又はIdを入力してください");
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-		sarchBtn.setBounds(384, 25, 58, 21);
+		sarchBtn.setBounds(384, 25, 79, 21);
 		panel.add(sarchBtn);
 		
 		JLabel lblId = new JLabel("id:");
@@ -168,22 +189,9 @@ public class employeeList extends JFrame {
 		lblId.setBounds(324, 26, 14, 16);
 		panel.add(lblId);
 		
-		nameField = new JTextField();
-		nameField.setBounds(146, 26, 96, 19);
-		panel.add(nameField);
-		nameField.setColumns(10);
-		
-		JButton btnNewButton = new JButton("検索");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnNewButton.setBounds(254, 25, 58, 21);
-		panel.add(btnNewButton);
-		
 		JLabel nameLabel = new JLabel("名前:");
-		nameLabel.setFont(new Font("MS UI Gothic", Font.PLAIN, 16));
-		nameLabel.setBounds(105, 26, 43, 16);
+		nameLabel.setFont(new Font("MS UI Gothic", Font.PLAIN, 12));
+		nameLabel.setBounds(182, 27, 32, 16);
 		panel.add(nameLabel);
 
 
