@@ -92,6 +92,9 @@ public class employeeList extends JFrame {
 		JButton addBtn = new JButton("従業員追加");
 		addBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				employeeAdd employeeAddView =new employeeAdd();
+				employeeAddView.setVisible(true);
+				dispose();
 			}
 		});
 		addBtn.setBounds(12, 100, 102, 40);
@@ -148,9 +151,11 @@ public class employeeList extends JFrame {
 				Connection conn = null;
 				PreparedStatement myPS2 = null;
 				PreparedStatement myPS3 = null;
+				PreparedStatement myPS4 = null;
 				String SarchNumber = SarchField.getText();
 				String SarchName = nameField.getText();
 				boolean textBox =false;
+				boolean idName = false;
 				
 				try {
 					
@@ -160,20 +165,37 @@ public class employeeList extends JFrame {
 					
 					String sql2 ="SELECT e.id, e.name, e.gender, p.phone, p.email, p.address, p.school "
 							+ "FROM employee AS e inner join personalInfo AS p ON e.personalInfo_id = p.id where e.name LIKE ?";
+					
+					String sql3 = "SELECT e.id, e.name, e.gender, p.phone, p.email, p.address, p.school "
+							+ "FROM employee AS e inner join personalInfo AS p ON e.personalInfo_id = p.id where e.id=? and e.name LIKE ?";
+					
 					myPS2 = conn.prepareStatement(sql);
 					myPS3 = conn.prepareStatement(sql2);
+					myPS4 = conn.prepareStatement(sql3);
 					
-					if(!(SarchNumber.isEmpty())){
+					if(!(SarchNumber.isEmpty())||!(SarchName.isEmpty())){
 						textBox = true;
-						myPS2.setString(1,SarchNumber);
-						ResultSet myRS2 = myPS2.executeQuery();
-						table.setModel(DbUtils.resultSetToTableModel(myRS2));
-					}if(!(SarchName.isEmpty())){
-						textBox = true;
-						myPS3.setString(1,"%"+SarchName+"%");
-						ResultSet myRS3 = myPS3.executeQuery();
-						table.setModel(DbUtils.resultSetToTableModel(myRS3));
-					}if(textBox==false){
+						idName=false;
+						myPS4.setString(1,SarchNumber);
+						myPS4.setString(2,"%"+SarchName+"%");
+						ResultSet myRS4 = myPS4.executeQuery();
+						if(myRS4!=null) {
+							idName=true;
+							table.setModel(DbUtils.resultSetToTableModel(myRS4));
+							if(!(SarchName.isEmpty())) {
+								if(SarchNumber.isEmpty()) {
+									myPS3.setString(1,"%"+SarchName+"%");
+									ResultSet myRS3 = myPS3.executeQuery();
+									table.setModel(DbUtils.resultSetToTableModel(myRS3));
+								}
+							}
+						}if(idName==false) {
+								myPS3.setString(1,"%"+SarchName+"%");
+								ResultSet myRS3 = myPS3.executeQuery();
+								table.setModel(DbUtils.resultSetToTableModel(myRS3));
+							}
+					}
+					if(textBox==false){
 						JOptionPane.showMessageDialog(sarchBtn, "名前又はIdを入力してください");
 					}
 				} catch (Exception e) {
