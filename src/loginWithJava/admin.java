@@ -60,6 +60,9 @@ public class admin extends JFrame {
 		JButton addBtn = new JButton("従業員追加");
 		addBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				employeeAdd employeeAddView =new employeeAdd();
+				employeeAddView.setVisible(true);
+				dispose();
 			}
 		});
 		addBtn.setBounds(12, 100, 102, 40);
