@@ -30,7 +30,6 @@ import java.awt.Font;
 public class employeeAdd extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField idField;
 	private JTextField passField;
 	private JTextField MyNumberField;
 	private JTextField phoneField;
@@ -75,12 +74,7 @@ public class employeeAdd extends JFrame {
 		JLabel label_1 = new JLabel("追加する情報を入力してください");
 		label_1.setBounds(58, 35, 233, 13);
 		panel.add(label_1);
-
-		idField = new JTextField();
-		idField.setBounds(102, 87, 96, 19);
-		panel.add(idField);
-		idField.setColumns(10);
-
+		
 		String[] gender = { "male", "female" };
 		JComboBox genderCombo = new JComboBox(gender);
 		genderCombo.setBounds(102, 145, 96, 19);
@@ -144,8 +138,8 @@ public class employeeAdd extends JFrame {
 				Connection conn = null;
 				PreparedStatement myPS = null;
 				PreparedStatement myPS2 = null;
+				PreparedStatement myPS3 = null;
 
-				String id = idField.getText();
 				String myNumber = MyNumberField.getText();
 				String phone = phoneField.getText();
 				String email = emailField.getText();
@@ -158,53 +152,62 @@ public class employeeAdd extends JFrame {
 				String gender = genderCombo.getItemAt(genderIndex).toString();
 				String role = roleCombo.getItemAt(roleIndex).toString();
 				String inDate = df.format(dateChooser.getDate());
+				boolean employee=false;
 				
 				try {
 
 					conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/management", "root", "yukkuri");
 
-					String sql = "INSERT INTO personalinfo (`id`, `MyNumber`, `phone`, `email`, `address`, `school`)"
-							+ " VALUES (?, ?, ?, ?, ?, ?)";
+					String sql = "INSERT INTO personalinfo ( `MyNumber`, `phone`, `email`, `address`, `school`)"
+							+ " VALUES ( ?, ?, ?, ?, ?)";
 
-					String sql2 = "INSERT INTO `employee` (`id`, `name`, `gender`, `role`, `inDate`, `pass`, `personalInfo_id`) "
-							+ " VALUES (?, ?, ?, ?, ?, ?, ?)";
+					String sql2 = "INSERT INTO `employee` ( `name`, `gender`, `role`, `inDate`, `pass`, `personalInfo_id`) "
+							+ " VALUES ( ?, ?, ?, ?, ?, ?)";
+					
+					String sql3 = "Select max(id) as pId from personalinfo";
 
 					myPS = conn.prepareStatement(sql);
 					myPS2 = conn.prepareStatement(sql2);
-
+					myPS3 = conn.prepareStatement(sql3);
 					
-						myPS.setString(1, id);
-						myPS.setString(2, myNumber);
-						myPS.setString(3, phone);
-						myPS.setString(4, email);
-						myPS.setString(5, address);
-						myPS.setString(6, school);
-
-						myPS2.setString(1, id);
-						myPS2.setString(2, name);
-						myPS2.setString(3, gender);
-						myPS2.setString(4, role);
-						myPS2.setString(5, inDate);
-						myPS2.setString(6, pass);
-						myPS2.setString(7, id);
-								
+					if(!(myNumber.isEmpty())&&!(phone.isEmpty())&&!(email.isEmpty())&&!(address.isEmpty())&&!(school.isEmpty())) {
+						myPS.setString(1, myNumber);
+						myPS.setString(2, phone);
+						myPS.setString(3, email);
+						myPS.setString(4, address);
+						myPS.setString(5, school);
 						myPS.execute();
+						
+						ResultSet myRS = myPS3.executeQuery();
+						while(myRS.next()) {
+							if(!(name.isEmpty())||!(pass.isEmpty())) {
+								employee=true;
+						String pId = myRS.getString("pId");
+						myPS2.setString(1, name);
+						myPS2.setString(2, gender);
+						myPS2.setString(3, role);
+						myPS2.setString(4, inDate);
+						myPS2.setString(5, pass);
+						myPS2.setString(6,pId);
 						myPS2.execute();
 						JOptionPane.showMessageDialog(AddBtn, "新しい社員を追加しました");
+							}if(employee==false) {
+								JOptionPane.showMessageDialog(AddBtn,"入力していない項目が存在します");
+							}
+						}
+					}else {
+						JOptionPane.showMessageDialog(AddBtn,"入力していない項目が存在します");
+					}		
 
 				} catch (SQLException e) {
-					JOptionPane.showMessageDialog(AddBtn,"そのIdは既に存在するか、入力していない項目が存在します");
+					
+					e.printStackTrace();
 				}
 			}
 		});
 		AddBtn.setBounds(600, 335, 91, 21);
 		panel.add(AddBtn);
 
-		JLabel lblId = new JLabel("Id：");
-		lblId.setFont(new Font("MS UI Gothic", Font.PLAIN, 16));
-		lblId.setBounds(52, 89, 38, 13);
-		lblId.setHorizontalAlignment(JLabel.RIGHT);
-		panel.add(lblId);
 
 		JLabel lblSeibet = new JLabel("性別：");
 		lblSeibet.setBounds(42, 148, 48, 13);
@@ -267,7 +270,7 @@ public class employeeAdd extends JFrame {
 		backBtn.setBounds(38, 335, 68, 21);
 		panel.add(backBtn);
 
-		JLabel label = new JLabel("従業員管理ページ");
+		JLabel label = new JLabel("従業員追加ページ");
 		label.setBounds(12, 10, 165, 13);
 		contentPane.add(label);
 
@@ -294,6 +297,13 @@ public class employeeAdd extends JFrame {
 		contentPane.add(addBtn);
 
 		JButton deleteBtn = new JButton("従業員削除");
+		deleteBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				employeeDelete employeeDeleteView =new employeeDelete();
+				employeeDeleteView.setVisible(true);
+				dispose();
+			}
+		});
 		deleteBtn.setBounds(12, 150, 102, 40);
 		contentPane.add(deleteBtn);
 
