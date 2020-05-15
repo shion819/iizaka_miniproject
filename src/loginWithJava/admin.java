@@ -69,6 +69,13 @@ public class admin extends JFrame {
 		contentPane.add(addBtn);
 		
 		JButton deleteBtn = new JButton("従業員削除");
+		deleteBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				employeeDelete employeeDeleteView =new employeeDelete();
+				employeeDeleteView.setVisible(true);
+				dispose();
+			}
+		});
 		deleteBtn.setBounds(12, 150, 102, 40);
 		contentPane.add(deleteBtn);
 		
