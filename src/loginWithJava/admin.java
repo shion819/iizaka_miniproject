@@ -80,6 +80,13 @@ public class admin extends JFrame {
 		contentPane.add(deleteBtn);
 		
 		JButton changeBtn = new JButton("情報の変更");
+		changeBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				employeeChange employeeChangeView = new employeeChange();
+				employeeChangeView.setVisible(true);
+				dispose();
+			}
+		});
 		changeBtn.setBounds(12, 200, 102, 40);
 		contentPane.add(changeBtn);
 		
